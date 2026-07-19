@@ -189,11 +189,11 @@
         }
       };
 
-      const handleHybridAction = () => {
+      const handleHybridAction = async () => {
         const score = calculateScore();
         
         // 1. Submit to Google Forms (silently)
-        submitToGoogleForms(contact.name, contact.email, contact.whatsapp, score);
+       await submitToGoogleForms(contact.name, contact.email, contact.whatsapp, score);
         
         // 2. Download PDF
         const { jsPDF } = window.jspdf;
