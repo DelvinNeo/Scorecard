@@ -196,7 +196,8 @@
         submitToGoogleForms(contact.name, contact.email, contact.whatsapp, score);
         
         // 2. Download PDF
-        const pdf = new jsPDF();
+        const { jsPDF } = window.jspdf;
+const pdf = new jsPDF();
         pdf.setFillColor(196, 30, 58);
         pdf.rect(0, 0, 210, 40, 'F');
         pdf.setTextColor(255, 255, 255);
@@ -432,10 +433,10 @@
                 onMouseEnter={(e) => e.target.style.background = '#A01529'}
                 onMouseLeave={(e) => e.target.style.background = '#C41E3A'}
               >
-                📥 Download Report + Book Assessment
+                📥 Get this Report(pdf) + Book an Assessment
               </button>
 
-              <p style={{ fontSize: '12px', color: '#999', textAlign: 'center', margin: '0' }}>Educational screening—not a substitute for a full audit.</p>
+              <p style={{ fontSize: '12px', color: '#999', textAlign: 'center', margin: '0' }}>This is Educational screening not a substitute for a full audit.</p>
             </div>
           )}
         </div>
