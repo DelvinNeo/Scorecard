@@ -150,20 +150,48 @@
           .slice(0, 3);
       };
 
-      const submitToGoogleForms = async (name, email, phone, score) => {
-        try {
-          const formURL = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
-          const formData = new FormData();
-          formData.append(`entry.${ENTRY_IDS.email}`, email);
-          formData.append(`entry.${ENTRY_IDS.name}`, name);
-          formData.append(`entry.${ENTRY_IDS.phone}`, phone);
-          formData.append(`entry.${ENTRY_IDS.score}`, score.toString());
+      const submitToGoogleForms = (name, email, phone, score) => {
 
-          await fetch(formURL, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors'
-          });
+    // Create hidden iframe so the page doesn't redirect
+    let iframe = document.getElementById("google-form-target");
+
+    if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.name = "google-form-target";
+        iframe.id = "google-form-target";
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+    }
+
+    // Create form
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
+    form.target = "google-form-target";
+
+    const fields = {
+        [`entry.${ENTRY_IDS.name}`]: name,
+        [`entry.${ENTRY_IDS.email}`]: email,
+        [`entry.${ENTRY_IDS.phone}`]: phone,
+        [`entry.${ENTRY_IDS.score}`]: score.toString()
+    };
+
+    Object.entries(fields).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+    setTimeout(() => {
+        form.remove();
+    }, 1000);
+};);
 
           console.log('✓ Data submitted to Google Sheets');
         } catch (error) {
@@ -193,7 +221,12 @@
         const score = calculateScore();
         
         // 1. Submit to Google Forms (silently)
-       await submitToGoogleForms(contact.name, contact.email, contact.whatsapp, score);
+       submitToGoogleForms(
+    contact.name,
+    contact.email,
+    contact.whatsapp,
+    score
+);
         
         // 2. Download PDF
         const { jsPDF } = window.jspdf;
