@@ -191,15 +191,8 @@
     setTimeout(() => {
         form.remove();
     }, 1000);
-};);
-
-          console.log('✓ Data submitted to Google Sheets');
-        } catch (error) {
-          console.error('Error submitting to Google Forms:', error);
-        }
-      };
-
-      const handleAnswer = (score) => {
+}
+        const handleAnswer = (score) => {
         setResponses({ ...responses, [questions[currentQ].id]: score });
         if (currentQ < questions.length - 1) {
           setCurrentQ(currentQ + 1);
