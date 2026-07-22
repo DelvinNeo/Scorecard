@@ -34,13 +34,7 @@
       const [emailValid, setEmailValid] = useState(null);
       const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-      const FORM_ID = '1FAIpQLSedfxCx2rysFNAi8HhNhL83y7eTPujgkGTQV8eDbdOpnQpJ7Q';
-      const ENTRY_IDS = {
-        email: '1045781291',
-        name: '2005620554',
-        phone: '1166974658',
-        score: '839337160'
-      };
+    
 
       const questions = [
         { id: 'website_clarity', zone: 'Website', q: 'When someone lands on your website, can they understand what you do in 5 seconds?', options: [
@@ -150,32 +144,20 @@
           .slice(0, 3);
       };
 
-      const submitToGoogleForms = (name, email, phone, score) => {
-
-    // Create hidden iframe so the page doesn't redirect
-    let iframe = document.getElementById("google-form-target");
-
-    if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.name = "google-form-target";
-        iframe.id = "google-form-target";
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-    }
-
-    // Create form
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
-    form.target = "google-form-target";
-
-    const fields = {
-        [`entry.${ENTRY_IDS.name}`]: name,
-        [`entry.${ENTRY_IDS.email}`]: email,
-        [`entry.${ENTRY_IDS.phone}`]: phone,
-        [`entry.${ENTRY_IDS.score}`]: score.toString()
-    };
-
+     const submitToGoogleForms = async (name, email, phone, score) => {
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwrfyFz3cyyOMjJ0Io5ypXpfoqs57LDOIGDEWt2fWoTmgDnFAwh7kahT9ZkNnh_1tjiNg/exec';
+  try {
+    const response = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ name, email, phone, score }),
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    const result = await response.json();
+    console.log('Submission result:', result);
+  } catch (error) {
+    console.error('Submission error:', error);
+  }
+};
     Object.entries(fields).forEach(([key, value]) => {
         const input = document.createElement("input");
         input.type = "hidden";
